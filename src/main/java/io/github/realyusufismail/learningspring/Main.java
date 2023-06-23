@@ -35,6 +35,15 @@ public class Main {
         customerRepo.save(customer);
     }
 
+    @PutMapping(path = "{customerId}")
+    public void updateCustomer(@PathVariable("customerId") Integer id, @RequestBody NewCustomerRequest request) {
+        Customer customer = customerRepo.findById(id).orElseThrow();
+        customer.setName(request.name());
+        customer.setEmail(request.email());
+        customer.setAge(request.age());
+        customerRepo.save(customer);
+    }
+
     @DeleteMapping(path = "{customerId}")
     public void deleteCustomer(@PathVariable("customerId") Integer id) {
         customerRepo.deleteById(id);
