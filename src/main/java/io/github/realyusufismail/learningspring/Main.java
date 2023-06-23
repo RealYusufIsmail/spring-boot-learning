@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//organise using NT articulate or others
 @SpringBootApplication
 @RestController
 @RequestMapping("api/v1/customers")
@@ -37,6 +38,7 @@ public class Main {
 
     @PutMapping(path = "{customerId}")
     public void updateCustomer(@PathVariable("customerId") Integer id, @RequestBody NewCustomerRequest request) {
+        //potentially catch the exception and return a 404
         Customer customer = customerRepo.findById(id).orElseThrow();
         customer.setName(request.name());
         customer.setEmail(request.email());
@@ -46,7 +48,12 @@ public class Main {
 
     @DeleteMapping(path = "{customerId}")
     public void deleteCustomer(@PathVariable("customerId") Integer id) {
-        customerRepo.deleteById(id);
+        //check if the customer exists
+        if (customerRepo.existsById(id)) {
+            customerRepo.deleteById(id);
+        } else {
+            throw new IllegalStateException("Customer with id " + id + " does not exist");
+        }
     }
 
     /**
